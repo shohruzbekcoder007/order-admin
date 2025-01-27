@@ -43,3 +43,13 @@ export type Foodtype = {
     name: string;
     description?: string;
 };
+
+export type RestaurantType = {
+    id: string;
+    name: string;
+    address?: string;
+    latitude?: number;
+    longitude?: number;
+    about?: string;
+    phone?: number;
+};

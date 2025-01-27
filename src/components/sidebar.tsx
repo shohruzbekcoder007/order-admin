@@ -61,8 +61,8 @@ export function Sidebar() {
         </div>
         <nav className="space-y-2 flex-grow">
           <NavItem href="/" icon={BarChart2}>Dashboard</NavItem>
-          <NavItem href="/foodtypes?page=1" icon={FileText}>Food types</NavItem>
-          <NavItem href="/restaurants?page=1" icon={Coffee}>Restaurants</NavItem>
+          <NavItem href="/foodtypes/all?page=1" icon={FileText}>Food types</NavItem>
+          <NavItem href="/restaurants/all?page=1" icon={Coffee}>Restaurants</NavItem>
           <NavItem href="/statistics" icon={PieChart}>Statistics</NavItem>
           <NavItem href="/reports" icon={BarChart2}>Reports</NavItem>
           <NavItem href="/imports" icon={FolderInput}>File Imports</NavItem>

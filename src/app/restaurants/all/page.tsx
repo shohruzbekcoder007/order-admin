@@ -3,19 +3,19 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { AddRecordForm } from "@/components/add-record-form"
 import Link from "next/link"
-import base_url from '../../lib/base_url'
-import { ApiResponsePagination, Foodtype } from '@/lib/module_types'
+import base_url from '../../../lib/base_url'
+import { ApiResponsePagination, RestaurantType } from '@/lib/module_types'
 
-interface FoodTypeProps {
+interface RestaurantTypeProps {
   searchParams: { page?: string, limit?: string };
 }
 
-async function fetchData(page: number, limit: number): Promise<ApiResponsePagination<Foodtype>> {
-  console.log(`Fetching data from: ${base_url}/foodtype/foodtypes?page=${page}&limit=${limit}`);
+async function fetchData(page: number, limit: number): Promise<ApiResponsePagination<RestaurantType>> {
+  console.log(`Fetching data from: ${base_url}/restaurant/restaurants?page=${page}&limit=${limit}`);
   
   try {
     const response = await fetch(
-      `${base_url}/foodtype/foodtypes?page=${page}&limit=${limit}`,
+      `${base_url}/restaurant/restaurants?page=${page}&limit=${limit}`,
       { 
         cache: "no-store",
         headers: {
@@ -46,12 +46,12 @@ async function fetchData(page: number, limit: number): Promise<ApiResponsePagina
   }
 }
 
-export default async function FoodTypePage({ searchParams }: FoodTypeProps) {
+export default async function RestaurantPage({ searchParams }: RestaurantTypeProps) {
 
   const currentPage = parseInt(searchParams.page || "1", 10);
   const countLimit = parseInt(searchParams.limit || "5", 10);
 
-  let data: Foodtype[] = [];
+  let data: RestaurantType[] = [];
   let total = 0;
   let totalPages = 0;
   let error: Error | null = null;
@@ -110,18 +110,26 @@ export default async function FoodTypePage({ searchParams }: FoodTypeProps) {
                 <tr className="border-b">
                   <th className="text-left py-3 px-4 font-medium text-sm">ID</th>
                   <th className="text-left py-3 px-4 font-medium text-sm">Name</th>
-                  <th className="text-left py-3 px-4 font-medium text-sm">Description</th>
+                  <th className="text-left py-3 px-4 font-medium text-sm">Address</th>
+                  <th className="text-left py-3 px-4 font-medium text-sm">Latitude</th>
+                  <th className="text-left py-3 px-4 font-medium text-sm">Longitude</th>
+                  <th className="text-left py-3 px-4 font-medium text-sm">About</th>
+                  <th className="text-left py-3 px-4 font-medium text-sm">Phone</th>
                 </tr>
               </thead>
               <tbody>
-                {data.map((foodtype, index) => (
+                {data.map((restaurant, index) => (
                   <tr
-                    key={foodtype.id}
+                    key={restaurant.id}
                     className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
                   >
-                    <td className="py-3 px-4">{foodtype.id}</td>
-                    <td className="py-3 px-4">{foodtype.name}</td>
-                    <td className="py-3 px-4">{foodtype.description}</td>
+                    <td className="py-3 px-4">{restaurant.id}</td>
+                    <td className="py-3 px-4">{restaurant.name}</td>
+                    <td className="py-3 px-4">{restaurant.address}</td>
+                    <td className="py-3 px-4">{restaurant.latitude}</td>
+                    <td className="py-3 px-4">{restaurant.longitude}</td>
+                    <td className="py-3 px-4">{restaurant.about}</td>
+                    <td className="py-3 px-4">{restaurant.phone}</td>
                   </tr>
                 ))}
               </tbody>
@@ -134,7 +142,7 @@ export default async function FoodTypePage({ searchParams }: FoodTypeProps) {
             </div>
             <div className="flex gap-2">
               {currentPage > 1 && (
-                <Link href={`/restaurants?page=${currentPage - 1}&limit=${countLimit}`}>
+                <Link href={`/restaurants/all?page=${currentPage - 1}&limit=${countLimit}`}>
                   <Button
                     variant="outline"
                     size="icon"
@@ -144,7 +152,7 @@ export default async function FoodTypePage({ searchParams }: FoodTypeProps) {
                 </Link>
               )}
               {currentPage < totalPages && (
-                <Link href={`/restaurants?page=${currentPage + 1}&limit=${countLimit}`}>
+                <Link href={`/restaurants/all?page=${currentPage + 1}&limit=${countLimit}`}>
                   <Button
                     variant="outline"
                     size="icon"
@@ -165,4 +173,3 @@ export default async function FoodTypePage({ searchParams }: FoodTypeProps) {
     </main>
   )
 }
-

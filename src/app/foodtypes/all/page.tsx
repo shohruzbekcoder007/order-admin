@@ -1,69 +1,66 @@
-import { ChevronLeft, ChevronRight, Plus } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Plus, Pencil } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { AddRecordForm } from "@/components/add-record-form"
 import Link from "next/link"
-import base_url from '../../lib/base_url'
-import { ApiResponsePagination, Foodtype } from '@/lib/module_types'
+import base_url from "../../../lib/base_url"
+import type { ApiResponsePagination, Foodtype } from "@/lib/module_types"
+import { DeleteFoodTypeDialog } from "@/components/delete-food-type-dialog"
 
 interface FoodTypeProps {
-  searchParams: { page?: string, limit?: string };
+  searchParams: { page?: string; limit?: string }
 }
 
 async function fetchData(page: number, limit: number): Promise<ApiResponsePagination<Foodtype>> {
-  console.log(`Fetching data from: ${base_url}/foodtype/foodtypes?page=${page}&limit=${limit}`);
-  
+  console.log(`Fetching data from: ${base_url}/foodtype/foodtypes?page=${page}&limit=${limit}`)
+
   try {
-    const response = await fetch(
-      `${base_url}/foodtype/foodtypes?page=${page}&limit=${limit}`,
-      { 
-        cache: "no-store",
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    const response = await fetch(`${base_url}/foodtype/foodtypes?page=${page}&limit=${limit}`, {
+      cache: "no-store",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}, statusText: ${response.statusText}`);
+      throw new Error(`HTTP error! status: ${response.status}, statusText: ${response.statusText}`)
     }
 
-    const contentType = response.headers.get("content-type");
+    const contentType = response.headers.get("content-type")
     if (!contentType || !contentType.includes("application/json")) {
-      throw new Error(`Unexpected content type: ${contentType}`);
+      throw new Error(`Unexpected content type: ${contentType}`)
     }
 
-    const result = await response.json();
-    
+    const result = await response.json()
+
     if (!result.data || !Array.isArray(result.data)) {
-      throw new Error(`Invalid data structure: ${JSON.stringify(result)}`);
+      throw new Error(`Invalid data structure: ${JSON.stringify(result)}`)
     }
 
-    return result;
+    return result
   } catch (error) {
-    console.error("Error in fetchData:", error);
-    throw error;
+    console.error("Error in fetchData:", error)
+    throw error
   }
 }
 
 export default async function FoodTypePage({ searchParams }: FoodTypeProps) {
+  const currentPage = Number.parseInt(searchParams.page || "1", 10)
+  const countLimit = Number.parseInt(searchParams.limit || "5", 10)
 
-  const currentPage = parseInt(searchParams.page || "1", 10);
-  const countLimit = parseInt(searchParams.limit || "5", 10);
-
-  let data: Foodtype[] = [];
-  let total = 0;
-  let totalPages = 0;
-  let error: Error | null = null;
+  let data: Foodtype[] = []
+  let total = 0
+  let totalPages = 0
+  let error: Error | null = null
 
   try {
-    const result = await fetchData(currentPage, countLimit);
-    data = result.data;
-    total = result.total;
-    totalPages = result.totalPages;
+    const result = await fetchData(currentPage, countLimit)
+    data = result.data
+    total = result.total
+    totalPages = result.totalPages
   } catch (e) {
-    error = e instanceof Error ? e : new Error('An unknown error occurred');
-    console.error("Error in FoodTypePage:", error);
+    error = e instanceof Error ? e : new Error("An unknown error occurred")
+    console.error("Error in FoodTypePage:", error)
   }
 
   if (error) {
@@ -79,7 +76,7 @@ export default async function FoodTypePage({ searchParams }: FoodTypeProps) {
           </pre>
         </div>
       </main>
-    );
+    )
   }
 
   return (
@@ -97,7 +94,7 @@ export default async function FoodTypePage({ searchParams }: FoodTypeProps) {
             <DialogHeader>
               <DialogTitle>Add New Food Type</DialogTitle>
             </DialogHeader>
-            <AddRecordForm/>
+            <AddRecordForm />
           </DialogContent>
         </Dialog>
       </div>
@@ -111,17 +108,26 @@ export default async function FoodTypePage({ searchParams }: FoodTypeProps) {
                   <th className="text-left py-3 px-4 font-medium text-sm">ID</th>
                   <th className="text-left py-3 px-4 font-medium text-sm">Name</th>
                   <th className="text-left py-3 px-4 font-medium text-sm">Description</th>
+                  <th className="text-left py-3 px-4 font-medium text-sm">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {data.map((foodtype, index) => (
-                  <tr
-                    key={foodtype.id}
-                    className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
-                  >
+                  <tr key={foodtype.id} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
                     <td className="py-3 px-4">{foodtype.id}</td>
                     <td className="py-3 px-4">{foodtype.name}</td>
                     <td className="py-3 px-4">{foodtype.description}</td>
+                    <td className="py-3 px-4">
+                      <div className="flex space-x-2">
+                        <Link href={`/foodtypes/${foodtype.id}/edit`}>
+                          <Button variant="outline" size="sm">
+                            <Pencil className="h-4 w-4 mr-2" />
+                            Edit
+                          </Button>
+                        </Link>
+                        <DeleteFoodTypeDialog foodTypeId={foodtype.id} foodTypeName={foodtype.name} />
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -134,21 +140,15 @@ export default async function FoodTypePage({ searchParams }: FoodTypeProps) {
             </div>
             <div className="flex gap-2">
               {currentPage > 1 && (
-                <Link href={`/foodtypes?page=${currentPage - 1}&limit=${countLimit}`}>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                  >
+                <Link href={`/foodtypes/all?page=${currentPage - 1}&limit=${countLimit}`}>
+                  <Button variant="outline" size="icon">
                     <ChevronLeft className="h-4 w-4" />
                   </Button>
                 </Link>
               )}
               {currentPage < totalPages && (
-                <Link href={`/foodtypes?page=${currentPage + 1}&limit=${countLimit}`}>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                  >
+                <Link href={`/foodtypes/all?page=${currentPage + 1}&limit=${countLimit}`}>
+                  <Button variant="outline" size="icon">
                     <ChevronRight className="h-4 w-4" />
                   </Button>
                 </Link>
@@ -165,5 +165,4 @@ export default async function FoodTypePage({ searchParams }: FoodTypeProps) {
     </main>
   )
 }
-
 
