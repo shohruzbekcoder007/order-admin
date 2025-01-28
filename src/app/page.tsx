@@ -1,5 +1,6 @@
 import { BarChart2, Clock, Shield, Users } from 'lucide-react'
 import { MetricCard } from "@/components/metric-card"
+import { ComboboxFoodType } from '@/components/food-type-autocomplete'
 
 export default function DashboardPage() {
   return (
@@ -42,6 +43,7 @@ export default function DashboardPage() {
           color="bg-purple-100 text-purple-600"
         />
       </div>
+      <ComboboxFoodType/>
     </main>
   )
 }
