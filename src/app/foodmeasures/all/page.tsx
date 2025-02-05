@@ -10,7 +10,11 @@ import { DeleteFoodMeasureDialog } from "@/components/delete-food-measure-dialog
 interface FoodMeasure {
   id: string
   name: string
+  nameUz: string
+  nameRu: string
   description: string
+  descriptionUz: string
+  descriptionRu: string
 }
 
 interface FoodMeasureProps {
@@ -113,7 +117,11 @@ export default async function FoodMeasurePage({ searchParams }: FoodMeasureProps
                 <tr className="border-b">
                   <th className="text-left py-3 px-4 font-medium text-sm">ID</th>
                   <th className="text-left py-3 px-4 font-medium text-sm">Name</th>
+                  <th className="text-left py-3 px-4 font-medium text-sm">Name (Uzbek)</th>
+                  <th className="text-left py-3 px-4 font-medium text-sm">Name (Russian)</th>
                   <th className="text-left py-3 px-4 font-medium text-sm">Description</th>
+                  <th className="text-left py-3 px-4 font-medium text-sm">Description (Uzbek)</th>
+                  <th className="text-left py-3 px-4 font-medium text-sm">Description (Russian)</th>
                   <th className="text-left py-3 px-4 font-medium text-sm">Actions</th>
                 </tr>
               </thead>
@@ -122,7 +130,11 @@ export default async function FoodMeasurePage({ searchParams }: FoodMeasureProps
                   <tr key={foodMeasure.id} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
                     <td className="py-3 px-4">{foodMeasure.id}</td>
                     <td className="py-3 px-4">{foodMeasure.name}</td>
+                    <td className="py-3 px-4">{foodMeasure.nameUz}</td>
+                    <td className="py-3 px-4">{foodMeasure.nameRu}</td>
                     <td className="py-3 px-4">{foodMeasure.description}</td>
+                    <td className="py-3 px-4">{foodMeasure.descriptionUz}</td>
+                    <td className="py-3 px-4">{foodMeasure.descriptionRu}</td>
                     <td className="py-3 px-4">
                       <div className="flex space-x-2">
                         <Link href={`/foodmeasures/${foodMeasure.id}/edit`}>
@@ -131,7 +143,15 @@ export default async function FoodMeasurePage({ searchParams }: FoodMeasureProps
                             Edit
                           </Button>
                         </Link>
-                        <DeleteFoodMeasureDialog foodMeasureId={foodMeasure.id} foodMeasureName={foodMeasure.name} />
+                        <DeleteFoodMeasureDialog
+                          foodMeasureId={foodMeasure.id}
+                          foodMeasureName={foodMeasure.name}
+                          foodMeasureNameUz={foodMeasure.nameUz}
+                          foodMeasureNameRu={foodMeasure.nameRu}
+                          foodMeasureDescription={foodMeasure.description}
+                          foodMeasureDescriptionUz={foodMeasure.descriptionUz}
+                          foodMeasureDescriptionRu={foodMeasure.descriptionRu}
+                        />
                       </div>
                     </td>
                   </tr>
@@ -171,3 +191,4 @@ export default async function FoodMeasurePage({ searchParams }: FoodMeasureProps
     </main>
   )
 }
+

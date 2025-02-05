@@ -4,8 +4,18 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { AddRecordForm } from "@/components/add-record-form"
 import Link from "next/link"
 import base_url from "../../../lib/base_url"
-import type { ApiResponsePagination, Foodtype } from "@/lib/module_types"
+import type { ApiResponsePagination } from "@/lib/module_types"
 import { DeleteFoodTypeDialog } from "@/components/delete-food-type-dialog"
+
+interface Foodtype {
+  id: string
+  name: string
+  nameUz: string
+  nameRu: string
+  description?: string
+  descriptionUz?: string
+  descriptionRu?: string
+}
 
 interface FoodTypeProps {
   searchParams: { page?: string; limit?: string }
@@ -107,7 +117,11 @@ export default async function FoodTypePage({ searchParams }: FoodTypeProps) {
                 <tr className="border-b">
                   <th className="text-left py-3 px-4 font-medium text-sm">ID</th>
                   <th className="text-left py-3 px-4 font-medium text-sm">Name</th>
+                  <th className="text-left py-3 px-4 font-medium text-sm">Name (Uzbek)</th>
+                  <th className="text-left py-3 px-4 font-medium text-sm">Name (Russian)</th>
                   <th className="text-left py-3 px-4 font-medium text-sm">Description</th>
+                  <th className="text-left py-3 px-4 font-medium text-sm">Description (Uzbek)</th>
+                  <th className="text-left py-3 px-4 font-medium text-sm">Description (Russian)</th>
                   <th className="text-left py-3 px-4 font-medium text-sm">Actions</th>
                 </tr>
               </thead>
@@ -116,7 +130,11 @@ export default async function FoodTypePage({ searchParams }: FoodTypeProps) {
                   <tr key={foodtype.id} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
                     <td className="py-3 px-4">{foodtype.id}</td>
                     <td className="py-3 px-4">{foodtype.name}</td>
+                    <td className="py-3 px-4">{foodtype.nameUz}</td>
+                    <td className="py-3 px-4">{foodtype.nameRu}</td>
                     <td className="py-3 px-4">{foodtype.description}</td>
+                    <td className="py-3 px-4">{foodtype.descriptionUz}</td>
+                    <td className="py-3 px-4">{foodtype.descriptionRu}</td>
                     <td className="py-3 px-4">
                       <div className="flex space-x-2">
                         <Link href={`/foodtypes/${foodtype.id}/edit`}>
@@ -125,7 +143,15 @@ export default async function FoodTypePage({ searchParams }: FoodTypeProps) {
                             Edit
                           </Button>
                         </Link>
-                        <DeleteFoodTypeDialog foodTypeId={foodtype.id} foodTypeName={foodtype.name} />
+                        <DeleteFoodTypeDialog
+                          foodTypeId={foodtype.id}
+                          foodTypeName={foodtype.name}
+                          foodTypeNameRu={foodtype.nameRu}
+                          foodTypeNameUz={foodtype.nameUz}
+                          foodTypeDescription={foodtype.description}
+                          foodTypeDescriptionRu={foodtype.descriptionRu}
+                          foodTypeDescriptionUz={foodtype.descriptionUz}
+                        />
                       </div>
                     </td>
                   </tr>

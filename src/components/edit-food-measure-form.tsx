@@ -11,13 +11,21 @@ import base_url from "@/lib/base_url"
 interface FoodMeasure {
   id: string
   name: string
+  nameUz: string
+  nameRu: string
   description: string
+  descriptionUz: string
+  descriptionRu: string
 }
 
 export function EditFoodMeasureForm({ foodMeasure }: { foodMeasure: FoodMeasure }) {
   const [formData, setFormData] = useState({
     name: foodMeasure.name,
-    description: foodMeasure.description || "",
+    nameUz: foodMeasure.nameUz,
+    nameRu: foodMeasure.nameRu,
+    description: foodMeasure.description,
+    descriptionUz: foodMeasure.descriptionUz,
+    descriptionRu: foodMeasure.descriptionRu,
   })
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
@@ -71,8 +79,36 @@ export function EditFoodMeasureForm({ foodMeasure }: { foodMeasure: FoodMeasure 
         <Input id="name" name="name" value={formData.name} onChange={handleChange} required />
       </div>
       <div>
+        <Label htmlFor="nameUz">Name (Uzbek)</Label>
+        <Input id="nameUz" name="nameUz" value={formData.nameUz} onChange={handleChange} required />
+      </div>
+      <div>
+        <Label htmlFor="nameRu">Name (Russian)</Label>
+        <Input id="nameRu" name="nameRu" value={formData.nameRu} onChange={handleChange} required />
+      </div>
+      <div>
         <Label htmlFor="description">Description</Label>
         <Input id="description" name="description" value={formData.description} onChange={handleChange} required />
+      </div>
+      <div>
+        <Label htmlFor="descriptionUz">Description (Uzbek)</Label>
+        <Input
+          id="descriptionUz"
+          name="descriptionUz"
+          value={formData.descriptionUz}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div>
+        <Label htmlFor="descriptionRu">Description (Russian)</Label>
+        <Input
+          id="descriptionRu"
+          name="descriptionRu"
+          value={formData.descriptionRu}
+          onChange={handleChange}
+          required
+        />
       </div>
       <Button type="submit" disabled={isLoading}>
         {isLoading ? "Updating..." : "Update Food Measure"}
@@ -80,3 +116,4 @@ export function EditFoodMeasureForm({ foodMeasure }: { foodMeasure: FoodMeasure 
     </form>
   )
 }
+

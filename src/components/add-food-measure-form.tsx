@@ -12,7 +12,11 @@ import base_url from "@/lib/base_url"
 export function AddFoodMeasureForm() {
   const [formData, setFormData] = useState({
     name: "",
+    nameUz: "",
+    nameRu: "",
     description: "",
+    descriptionUz: "",
+    descriptionRu: "",
   })
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
@@ -46,7 +50,7 @@ export function AddFoodMeasureForm() {
         description: `${formData.name} has been successfully added.`,
       })
       router.refresh()
-      setFormData({ name: "", description: "" })
+      setFormData({ name: "", nameUz: "", nameRu: "", description: "", descriptionUz: "", descriptionRu: "" })
     } catch (error) {
       console.error("Error adding food measure:", error)
       toast({
@@ -69,6 +73,32 @@ export function AddFoodMeasureForm() {
           <Input id="name" name="name" value={formData.name} onChange={handleChange} className="col-span-3" required />
         </div>
         <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="nameUz" className="text-right">
+            Name (Uzbek)
+          </Label>
+          <Input
+            id="nameUz"
+            name="nameUz"
+            value={formData.nameUz}
+            onChange={handleChange}
+            className="col-span-3"
+            required
+          />
+        </div>
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="nameRu" className="text-right">
+            Name (Russian)
+          </Label>
+          <Input
+            id="nameRu"
+            name="nameRu"
+            value={formData.nameRu}
+            onChange={handleChange}
+            className="col-span-3"
+            required
+          />
+        </div>
+        <div className="grid grid-cols-4 items-center gap-4">
           <Label htmlFor="description" className="text-right">
             Description
           </Label>
@@ -76,6 +106,32 @@ export function AddFoodMeasureForm() {
             id="description"
             name="description"
             value={formData.description}
+            onChange={handleChange}
+            className="col-span-3"
+            required
+          />
+        </div>
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="descriptionUz" className="text-right">
+            Description (Uzbek)
+          </Label>
+          <Input
+            id="descriptionUz"
+            name="descriptionUz"
+            value={formData.descriptionUz}
+            onChange={handleChange}
+            className="col-span-3"
+            required
+          />
+        </div>
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="descriptionRu" className="text-right">
+            Description (Russian)
+          </Label>
+          <Input
+            id="descriptionRu"
+            name="descriptionRu"
+            value={formData.descriptionRu}
             onChange={handleChange}
             className="col-span-3"
             required

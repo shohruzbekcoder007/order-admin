@@ -11,9 +11,22 @@ import base_url from "@/lib/base_url"
 interface DeleteFoodMeasureDialogProps {
   foodMeasureId: string
   foodMeasureName: string
+  foodMeasureNameUz: string
+  foodMeasureNameRu: string
+  foodMeasureDescription: string
+  foodMeasureDescriptionUz: string
+  foodMeasureDescriptionRu: string
 }
 
-export function DeleteFoodMeasureDialog({ foodMeasureId, foodMeasureName }: DeleteFoodMeasureDialogProps) {
+export function DeleteFoodMeasureDialog({
+  foodMeasureId,
+  foodMeasureName,
+  foodMeasureNameUz,
+  foodMeasureNameRu,
+  foodMeasureDescription,
+  foodMeasureDescriptionUz,
+  foodMeasureDescriptionRu,
+}: DeleteFoodMeasureDialogProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const router = useRouter()
@@ -59,7 +72,15 @@ export function DeleteFoodMeasureDialog({ foodMeasureId, foodMeasureName }: Dele
         <DialogHeader>
           <DialogTitle>Are you sure you want to delete this food measure?</DialogTitle>
         </DialogHeader>
-        <p>This action cannot be undone. This will permanently delete the food measure "{foodMeasureName}".</p>
+        <p>This action cannot be undone. This will permanently delete the food measure:</p>
+        <ul className="list-disc list-inside mt-2">
+          <li>Name: {foodMeasureName}</li>
+          <li>Name (Uzbek): {foodMeasureNameUz}</li>
+          <li>Name (Russian): {foodMeasureNameRu}</li>
+          <li>Description: {foodMeasureDescription}</li>
+          <li>Description (Uzbek): {foodMeasureDescriptionUz}</li>
+          <li>Description (Russian): {foodMeasureDescriptionRu}</li>
+        </ul>
         <DialogFooter>
           <Button variant="outline" onClick={() => setIsOpen(false)}>
             Cancel
@@ -72,3 +93,4 @@ export function DeleteFoodMeasureDialog({ foodMeasureId, foodMeasureName }: Dele
     </Dialog>
   )
 }
+

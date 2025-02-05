@@ -1,69 +1,65 @@
-import { ChevronLeft, ChevronRight, Plus } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { AddRecordForm } from "@/components/add-record-form"
+import { AddRestaurantForm } from "@/components/add-restaurant-form.tsx"
 import Link from "next/link"
-import base_url from '../../../lib/base_url'
-import { ApiResponsePagination, RestaurantType } from '@/lib/module_types'
+import base_url from "../../../lib/base_url"
+import type { ApiResponsePagination, RestaurantType } from "@/lib/module_types"
 
 interface RestaurantTypeProps {
-  searchParams: { page?: string, limit?: string };
+  searchParams: { page?: string; limit?: string }
 }
 
 async function fetchData(page: number, limit: number): Promise<ApiResponsePagination<RestaurantType>> {
-  console.log(`Fetching data from: ${base_url}/restaurant/restaurants?page=${page}&limit=${limit}`);
-  
+  console.log(`Fetching data from: ${base_url}/restaurant/restaurants?page=${page}&limit=${limit}`)
+
   try {
-    const response = await fetch(
-      `${base_url}/restaurant/restaurants?page=${page}&limit=${limit}`,
-      { 
-        cache: "no-store",
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    const response = await fetch(`${base_url}/restaurant/restaurants?page=${page}&limit=${limit}`, {
+      cache: "no-store",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}, statusText: ${response.statusText}`);
+      throw new Error(`HTTP error! status: ${response.status}, statusText: ${response.statusText}`)
     }
 
-    const contentType = response.headers.get("content-type");
+    const contentType = response.headers.get("content-type")
     if (!contentType || !contentType.includes("application/json")) {
-      throw new Error(`Unexpected content type: ${contentType}`);
+      throw new Error(`Unexpected content type: ${contentType}`)
     }
 
-    const result = await response.json();
-    
+    const result = await response.json()
+
     if (!result.data || !Array.isArray(result.data)) {
-      throw new Error(`Invalid data structure: ${JSON.stringify(result)}`);
+      throw new Error(`Invalid data structure: ${JSON.stringify(result)}`)
     }
 
-    return result;
+    return result
   } catch (error) {
-    console.error("Error in fetchData:", error);
-    throw error;
+    console.error("Error in fetchData:", error)
+    throw error
   }
 }
 
 export default async function RestaurantPage({ searchParams }: RestaurantTypeProps) {
+  const currentPage = Number.parseInt(searchParams.page || "1", 10)
+  const countLimit = Number.parseInt(searchParams.limit || "5", 10)
 
-  const currentPage = parseInt(searchParams.page || "1", 10);
-  const countLimit = parseInt(searchParams.limit || "5", 10);
-
-  let data: RestaurantType[] = [];
-  let total = 0;
-  let totalPages = 0;
-  let error: Error | null = null;
+  let data: RestaurantType[] = []
+  let total = 0
+  let totalPages = 0
+  let error: Error | null = null
 
   try {
-    const result = await fetchData(currentPage, countLimit);
-    data = result.data;
-    total = result.total;
-    totalPages = result.totalPages;
+    const result = await fetchData(currentPage, countLimit)
+    data = result.data
+    total = result.total
+    totalPages = result.totalPages
   } catch (e) {
-    error = e instanceof Error ? e : new Error('An unknown error occurred');
-    console.error("Error in Restaurants:", error);
+    error = e instanceof Error ? e : new Error("An unknown error occurred")
+    console.error("Error in Restaurants:", error)
   }
 
   if (error) {
@@ -79,7 +75,7 @@ export default async function RestaurantPage({ searchParams }: RestaurantTypePro
           </pre>
         </div>
       </main>
-    );
+    )
   }
 
   return (
@@ -97,7 +93,7 @@ export default async function RestaurantPage({ searchParams }: RestaurantTypePro
             <DialogHeader>
               <DialogTitle>Add New Restaurant</DialogTitle>
             </DialogHeader>
-            <AddRecordForm/>
+            <AddRestaurantForm />
           </DialogContent>
         </Dialog>
       </div>
@@ -114,21 +110,22 @@ export default async function RestaurantPage({ searchParams }: RestaurantTypePro
                   <th className="text-left py-3 px-4 font-medium text-sm">Latitude</th>
                   <th className="text-left py-3 px-4 font-medium text-sm">Longitude</th>
                   <th className="text-left py-3 px-4 font-medium text-sm">About</th>
+                  <th className="text-left py-3 px-4 font-medium text-sm">AboutUz</th>
+                  <th className="text-left py-3 px-4 font-medium text-sm">AboutRu</th>
                   <th className="text-left py-3 px-4 font-medium text-sm">Phone</th>
                 </tr>
               </thead>
               <tbody>
                 {data.map((restaurant, index) => (
-                  <tr
-                    key={restaurant.id}
-                    className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
-                  >
+                  <tr key={restaurant.id} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
                     <td className="py-3 px-4">{restaurant.id}</td>
                     <td className="py-3 px-4">{restaurant.name}</td>
                     <td className="py-3 px-4">{restaurant.address}</td>
                     <td className="py-3 px-4">{restaurant.latitude}</td>
                     <td className="py-3 px-4">{restaurant.longitude}</td>
                     <td className="py-3 px-4">{restaurant.about}</td>
+                    <td className="py-3 px-4">{restaurant.aboutUz}</td>
+                    <td className="py-3 px-4">{restaurant.aboutRu}</td>
                     <td className="py-3 px-4">{restaurant.phone}</td>
                   </tr>
                 ))}
@@ -143,20 +140,14 @@ export default async function RestaurantPage({ searchParams }: RestaurantTypePro
             <div className="flex gap-2">
               {currentPage > 1 && (
                 <Link href={`/restaurants/all?page=${currentPage - 1}&limit=${countLimit}`}>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                  >
+                  <Button variant="outline" size="icon">
                     <ChevronLeft className="h-4 w-4" />
                   </Button>
                 </Link>
               )}
               {currentPage < totalPages && (
                 <Link href={`/restaurants/all?page=${currentPage + 1}&limit=${countLimit}`}>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                  >
+                  <Button variant="outline" size="icon">
                     <ChevronRight className="h-4 w-4" />
                   </Button>
                 </Link>
@@ -173,3 +164,4 @@ export default async function RestaurantPage({ searchParams }: RestaurantTypePro
     </main>
   )
 }
+
